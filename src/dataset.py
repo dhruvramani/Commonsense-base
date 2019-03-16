@@ -193,6 +193,6 @@ if __name__ == '__main__':
     for i in range(0, len(dataloader)):
         embA, predA, embB, predB = next(dataloader)
         print(embA.shape, predA.shape, embB.shape, predB.shape)
-        break
+        #break
 
 
