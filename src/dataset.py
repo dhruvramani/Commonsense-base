@@ -97,6 +97,8 @@ class CommonSenseDataset(Dataset):
             file = open(_DIR + self.pickle_path, 'rb+')
             self.to_write = pickle.load(file)
             file.close()
+            print(self.to_write)
+            _ = input("")
             return True
 
         with open(_DIR + self.partition_path, "r") as f:
