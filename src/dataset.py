@@ -168,6 +168,9 @@ class CommonSenseDataset(Dataset):
         utterA = [x for x in utterances if x[0] == "A"]
         utterB = [x for x in utterances if x[0] == "B"]
 
+        if(len(utterA) == 0 or len(utterB) == 0):
+            return self.__getitem__(idx + 1)
+
         print(utterA)
         for uttr in utterA:
             uttr_text = uttr[1]
