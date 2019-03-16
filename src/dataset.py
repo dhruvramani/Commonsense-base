@@ -157,37 +157,31 @@ class CommonSenseDataset(Dataset):
         data = self.to_write[self.tr]
         if(idx + self.step_size > len(data)):
             idx = (idx + self.step_size) - len(data) 
-        start_elem = data[idx]
-        print(start_elem)
-        charA, charB = start_elem["A"], start_elem["B"]
+        elements = data[idx]
+        charA, charB = elements["A"], elements["B"]
         embA, embB = np.zeros((1, self.step_size, _EMB_DIM)), np.zeros((1, self.step_size, _EMB_DIM))
         predA, predB = None, None
         countA, countB = 0, 0
 
-        _ = input(" ")
-        while countA <= min(self.step_size, len(data)):
-            elements = data[idx + countA]
-            utterances = element["utts"]
-            for element in utterances:
-                if(elements["A"] == charA):
-                    uttr_text = element[1]
-                    embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
-                    embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
-                    embA[0, countA, :] = embedding
-                    countA += 1
-        predA = utterances[-1][-1]
-                
-        while countB <= min(self.step_size, len(data)):
-            elements = data[idx + countB]
-            utterances = element["utts"]
-            for element in utterances:
-                if(elements["B"] == charB):
-                    uttr_text = element[1]
-                    embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
-                    embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
-                    embB[0, countB, :] = embedding
-                    countB += 1
-        predB = data[idx + countB]["utts"][-1][0]
+        utterances = elements["utts"]
+        utterA = [x if x[0] == "A" for x in utterances]
+        utterB = [x if x[0] == "B" for x in utterances]
+
+        for uttr in utterA:
+            uttr_text = uttr[1]
+            embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
+            embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
+            embA[0, countA, :] = embedding
+            countA += 1
+        predA = utterA[-1][-1]
+
+        for uttr in utterB:
+            uttr_text = uttr[1]
+            embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
+            embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
+            embA[0, countB, :] = embedding
+            countB += 1
+        predB = utterB[-1][-1]
 
         return embA, predA, embB, predB
 
