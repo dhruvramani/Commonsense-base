@@ -167,6 +167,7 @@ class CommonSenseDataset(Dataset):
         utterA = [x for x in utterances if x[0] == "A"]
         utterB = [x for x in utterances if x[0] == "B"]
 
+        print(utterA)
         for uttr in utterA:
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
