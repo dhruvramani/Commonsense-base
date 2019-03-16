@@ -92,7 +92,7 @@ class CommonSenseDataset(Dataset):
 
     def main_run(self):
         if(os.path.isfile(_DIR + self.pickle_path)):
-            file = open(_DIR + self.pickle_path 'rb+')
+            file = open(_DIR + self.pickle_path, 'rb+')
             self.to_write = pickle.load(file)
             file_handler.close()
             return True

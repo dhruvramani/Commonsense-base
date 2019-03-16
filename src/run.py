@@ -38,17 +38,17 @@ net = net.to(device)
 if(args.resume):
     if(os.path.isfile('../save/network.ckpt')):
         net.load_state_dict(torch.load('../save/network.ckpt'))
-        print('==> SpaceNet : loaded')
+        print('==> CommonSenseNet : loaded')
 
     if(os.path.isfile("../save/info.txt")):
         with open("../save/info.txt", "r") as f:
             epoch, step = (int(i) for i in str(f.read()).split(" "))
-        print("=> SpaceNet : prev epoch found")
+        print("=> CommonSenseNet : prev epoch found")
 
 def train(epoch):
     global step
     print('==> Preparing data..')
-    dataset = DebrisDataset(n_rows=30, steps= 10)
+    dataset = CommonSenseDataset(n_rows=30, steps= 10)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     dataloader = iter(dataloader)
 
@@ -84,6 +84,9 @@ def train(epoch):
     step = 0
     print('=> Loss Network : Epoch [{}/{}], Loss:{:.4f}'.format(epoch + 1, 5, train_loss / len(dataloader)))
 
+def test():
+    # TODO finish
+    pass
 
 for epoch in range(epoch, epoch + args.epochs):
     train(epoch)
