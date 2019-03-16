@@ -172,16 +172,18 @@ class CommonSenseDataset(Dataset):
         for uttr in utterA:
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
-            embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
-            embA[0, countA, :, :] = embedding
+            embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
+            for i in range(0, len(embedding))
+                embA[0, countA, i, :] = embedding[i]
             countA += 1
         predA = utterA[-1][-1]
 
         for uttr in utterB:
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
-            embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
-            embA[0, countB, :, :] = embedding
+            embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
+            for i in range(0, len(embedding))
+                embA[0, countB, i, :] = embedding[i]
             countB += 1
         predB = utterB[-1][-1]
 
