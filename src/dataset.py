@@ -11,6 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 _DIR = "/home/nevronas/Projects/Personal-Projects/Dhruv/NeuralDialog-CVAE/"
 _GLOVE_PATH = '/home/nevronas/word_embeddings/glove_twitter'
 _EMB_DIM = 50
+_MAX_WLEN = 20
 
 def init_glove(glove_path=_GLOVE_PATH): # Run only first time
     words = []
@@ -159,7 +160,7 @@ class CommonSenseDataset(Dataset):
             idx = (idx + self.step_size) - len(data) 
         elements = data[idx]
         charA, charB = elements["A"], elements["B"]
-        embA, embB = np.zeros((1, self.step_size, _EMB_DIM)), np.zeros((1, self.step_size, _EMB_DIM))
+        embA, embB = np.zeros((1, self.step_size, _MAX_WLEN, _EMB_DIM)), np.zeros((1, self.step_size, _MAX_WLEN, _EMB_DIM))
         predA, predB = None, None
         countA, countB = 0, 0
 
@@ -172,7 +173,7 @@ class CommonSenseDataset(Dataset):
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
             embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
-            embA[0, countA, :] = embedding
+            embA[0, countA, :, :] = embedding
             countA += 1
         predA = utterA[-1][-1]
 
@@ -180,7 +181,7 @@ class CommonSenseDataset(Dataset):
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
             embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
-            embA[0, countB, :] = embedding
+            embA[0, countB, :, :] = embedding
             countB += 1
         predB = utterB[-1][-1]
 
