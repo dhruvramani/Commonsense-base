@@ -34,10 +34,11 @@ def init_glove(glove_path=_GLOVE_PATH): # Run only first time
     return idx
 
 class CommonSenseDataset(Dataset):
-    def __init__(self, step_size, tr="train", annotation_path="data/commonsense/json_version/annotations.json", partition_path="data/commonsense/storyid_partition.txt", pickle_path="data/commonsense/data.pkl"):
+    def __init__(self, step_size, tr="train", annotation_path="data/commonsense/json_version/annotations.json", partition_path="data/commonsense/storyid_partition.txt", pickle_path="data/commonsense/data.pkl", glove_path=_GLOVE_PATH):
         self.tr = tr
         self.step_size = step_size
         self.pickle_path = pickle_path
+        self.glove_path = glove_path
         self.partition_path = partition_path
         self.annotation_path = annotation_path
 
