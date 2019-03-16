@@ -168,7 +168,6 @@ class CommonSenseDataset(Dataset):
             if(element["A"] == charA):
                 uttr_text = element["utts"][1]
                 print(uttr_text)
-                _ = input(" ")
                 embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
                 embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
                 embA[0, countA, :] = embedding
