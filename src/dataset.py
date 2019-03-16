@@ -97,8 +97,6 @@ class CommonSenseDataset(Dataset):
             file = open(_DIR + self.pickle_path, 'rb+')
             self.to_write = pickle.load(file)
             file.close()
-            print(self.to_write)
-            _ = input("")
             return True
 
         with open(_DIR + self.partition_path, "r") as f:
@@ -156,10 +154,9 @@ class CommonSenseDataset(Dataset):
        return len(self.to_write[self.tr])
 
     def __getitem__(self, idx):
+        data = self.to_write[self.tr]
         if(idx + self.step_size > len(data)):
             idx = (idx + self.step_size) - len(data) 
-
-        data = self.to_write[self.tr]
         start_elem = data[idx]
         charA, charB = start_elem["A"], start_elem["B"]
         embA, embB = np.zeros((1, self.step_size, _EMB_DIM)), np.zeros((1, self.step_size, _EMB_DIM))
