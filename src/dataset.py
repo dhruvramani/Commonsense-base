@@ -158,30 +158,35 @@ class CommonSenseDataset(Dataset):
         if(idx + self.step_size > len(data)):
             idx = (idx + self.step_size) - len(data) 
         start_elem = data[idx]
+        print(start_elem)
         charA, charB = start_elem["A"], start_elem["B"]
         embA, embB = np.zeros((1, self.step_size, _EMB_DIM)), np.zeros((1, self.step_size, _EMB_DIM))
         predA, predB = None, None
         countA, countB = 0, 0
 
+        _ = input(" ")
         while countA <= min(self.step_size, len(data)):
-            element = data[idx + countA]
-            print(element["utts"])
-            if(element["A"] == charA):
-                uttr_text = element["utts"][1]
-                embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
-                embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
-                embA[0, countA, :] = embedding
-                countA += 1
-        predA = data[idx + countA]["utts"][-1][0]
+            elements = data[idx + countA]
+            utterances = element["utts"]
+            for element in utterances:
+                if(elements["A"] == charA):
+                    uttr_text = element[1]
+                    embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
+                    embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
+                    embA[0, countA, :] = embedding
+                    countA += 1
+        predA = utterances[-1][-1]
                 
         while countB <= min(self.step_size, len(data)):
-            element = data[idx + countB]
-            if(element["A"] == charA):
-                uttr_text = element["utts"][1]
-                embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
-                embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
-                embB[0, countB, :] = embedding
-                countB += 1
+            elements = data[idx + countB]
+            utterances = element["utts"]
+            for element in utterances:
+                if(elements["B"] == charB):
+                    uttr_text = element[1]
+                    embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
+                    embedding = np.asarray([self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")])
+                    embB[0, countB, :] = embedding
+                    countB += 1
         predB = data[idx + countB]["utts"][-1][0]
 
         return embA, predA, embB, predB
