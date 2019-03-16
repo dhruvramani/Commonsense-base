@@ -164,8 +164,8 @@ class CommonSenseDataset(Dataset):
         countA, countB = 0, 0
 
         utterances = elements["utts"]
-        utterA = [x if x[0] == "A" for x in utterances]
-        utterB = [x if x[0] == "B" for x in utterances]
+        utterA = [x for x in utterances if x[0] == "A"]
+        utterB = [x for x in utterances if x[0] == "B"]
 
         for uttr in utterA:
             uttr_text = uttr[1]
