@@ -2,6 +2,7 @@ import re
 import os
 import json
 import torch 
+import bcolz
 import pickle
 import numpy as np
 from torch.utils.data import Dataset, DataLoader
