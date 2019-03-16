@@ -171,7 +171,7 @@ class CommonSenseDataset(Dataset):
         if(len(utterA) == 0 or len(utterB) == 0):
             return self.__getitem__(idx + 1)
 
-        print(utterA)
+        #print(utterA)
         for uttr in utterA:
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
@@ -190,13 +190,13 @@ class CommonSenseDataset(Dataset):
             countB += 1
         predB = utterB[-1][-1]
 
-        return embA, predA, embB, predB
+        return np.array(embA), np.array(predA), np.array(embB), np.array(predB)
 
 if __name__ == '__main__':
     dset = CommonSenseDataset(10)
     dataloader = DataLoader(dset, batch_size=128, shuffle=True, num_workers=1)
     dataloader = iter(dataloader)
-    for i in range(0, len(dataloader)):
+    for i in range(0, len(dataloader) - 1):
         embA, predA, embB, predB = next(dataloader)
         print(embA.shape, predA.shape, embB.shape, predB.shape)
         #break
