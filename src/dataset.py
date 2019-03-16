@@ -173,7 +173,7 @@ class CommonSenseDataset(Dataset):
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
             embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
-            for i in range(0, len(embedding))
+            for i in range(0, len(embedding)):
                 embA[0, countA, i, :] = embedding[i]
             countA += 1
         predA = utterA[-1][-1]
@@ -182,7 +182,7 @@ class CommonSenseDataset(Dataset):
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
             embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
-            for i in range(0, len(embedding))
+            for i in range(0, len(embedding)):
                 embA[0, countB, i, :] = embedding[i]
             countB += 1
         predB = utterB[-1][-1]
