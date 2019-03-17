@@ -60,6 +60,7 @@ def train(epoch):
     for i in range(step, len(dataloader)):
         sequences, predictions = next(dataloader)
         #sequences, predictions = sequences.permute([1, 0, 2]), predictions.permute([1, 0, 2])
+        sequences = sequences.unsqueeze(1)
         sequences, predictions = sequences.to(device), predictions.to(device)
         output = net(sequences)
         optimizer.zero_grad()
