@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
 class RowCNN(nn.Module):
     def __init__(self, num_classes=8, split_size=100):
         super(RowCNN, self).__init__()
@@ -46,8 +48,8 @@ class BiRNN(nn.Module):
     
     def forward(self, x):
         if(self.h0 == None or self.c0 == None):
-            self.h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size) # 2 for bidirection 
-            self.c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size)
+            self.h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device) # 2 for bidirection 
+            self.c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device)
         
         out, _ = self.lstm(x, (self.h0, self.c0))  # out: tensor of shape (batch_size, seq_length, hidden_size*2)
         
