@@ -11,7 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 _DIR = "/home/nevronas/Projects/Personal-Projects/Dhruv/NeuralDialog-CVAE/"
 _GLOVE_PATH = '/home/nevronas/word_embeddings/glove_twitter'
 _EMB_DIM = 50
-_MAX_WLEN = 15
+_MAX_WLEN = 18
 
 def init_glove(glove_path=_GLOVE_PATH): # Run only first time
     words = []
