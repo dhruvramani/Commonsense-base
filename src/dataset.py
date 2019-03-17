@@ -210,7 +210,7 @@ if __name__ == '__main__':
     dataloader = iter(dataloader)
     for i in range(0, len(dataloader) - 1):
         embA, predA  = next(dataloader)
-        embA.unsqueeze(1)
+        embA = embA.unsqueeze(1)
         #countZ, zero = 0, np.zeros((_EMB_DIM))
         print(embA.shape, predA.shape) #, embB.shape, predB.shape)
     '''
