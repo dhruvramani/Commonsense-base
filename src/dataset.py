@@ -193,14 +193,13 @@ class CommonSenseDataset(Dataset):
         return np.array(embA), predA, np.array(embB), predB
 
 if __name__ == '__main__':
-    init_glove()
-    # dset = CommonSenseDataset(10)
-    # dataloader = DataLoader(dset, batch_size=128, shuffle=True, num_workers=1)
-    # dataloader = iter(dataloader)
-    # for i in range(0, len(dataloader) - 1):
-    #     embA, predA, embB, predB = next(dataloader)
-    #     countZ, zero = 0, np.zeros((_EMB_DIM))
-    #     print(embA.shape, predA.shape, embB.shape, predB.shape)
+    dset = CommonSenseDataset(10)
+    dataloader = DataLoader(dset, batch_size=128, shuffle=True, num_workers=1)
+    dataloader = iter(dataloader)
+    for i in range(0, len(dataloader) - 1):
+        embA, predA, embB, predB = next(dataloader)
+        countZ, zero = 0, np.zeros((_EMB_DIM))
+        print(embA.shape, predA.shape, embB.shape, predB.shape)
     '''
     for i in range(0, 80):
         if(np.array_equal(np.array(embA[0, i, :]), zero)):
@@ -208,5 +207,3 @@ if __name__ == '__main__':
     print(countZ)
     break
     '''
-
-
