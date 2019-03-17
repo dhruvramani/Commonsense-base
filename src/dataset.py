@@ -59,7 +59,7 @@ class CommonSenseDataset(Dataset):
     def get_length(self):
         len_g = 0
         for elements in self.to_write[self.tr]:
-            leng += len(elements["utts"])
+            len_g += len(elements["utts"])
         return len_g
 
     def load_glove(self):
