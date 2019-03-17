@@ -200,7 +200,12 @@ if __name__ == '__main__':
     dataloader = iter(dataloader)
     for i in range(0, len(dataloader) - 1):
         embA, predA, embB, predB = next(dataloader)
+        countZ, zero = 0, np.zeros((_EMB_DIM))
         print(embA.shape, predA.shape, embB.shape, predB.shape)
+        for i in range(0, 200):
+            if(embA[0, i, :] == zero):
+                countZ += 1
+        print(countZ)
         #break
 
 
