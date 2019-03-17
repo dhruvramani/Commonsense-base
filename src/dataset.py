@@ -158,9 +158,11 @@ class CommonSenseDataset(Dataset):
 
     def __getitem__(self, idx):
         data = self.to_write[self.tr]
-        # if(idx + self.step_size > len(data)):
-        #     idx = (idx + self.step_size) - len(data) 
+        if(idx + self.step_size > len(data)):
+             idx = (idx + self.step_size) - len(data) 
         elements = data[self.counter]
+        print(elements)
+        _ = input(" ")
         charA, charB = elements["A"], elements["B"]
         embA = np.zeros((_MAX_WLEN, _EMB_DIM)) #, np.zeros((_MAX_WLEN, _EMB_DIM))
         predA = np.zeros((len(self.classes)))#, np.zeros((len(self.classes)))
