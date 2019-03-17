@@ -61,7 +61,7 @@ def train(epoch):
         sequences, predictions = next(dataloader)
         #sequences, predictions = sequences.permute([1, 0, 2]), predictions.permute([1, 0, 2])
         sequences = sequences.unsqueeze(1)
-        sequences, predictions = sequences.to(device), predictions.to(device)
+        sequences, predictions = sequences.to(device).type(torch.FloatTensor), predictions.to(device).type(torch.FloatTensor)
         output = net(sequences)
         optimizer.zero_grad()
         loss = loss_fn(output, predictions) # Last LSTM output, Prediction
