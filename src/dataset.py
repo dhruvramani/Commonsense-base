@@ -161,19 +161,18 @@ class CommonSenseDataset(Dataset):
         if(idx + self.step_size > len(data)):
              idx = (idx + self.step_size) - len(data) 
         elements = data[self.counter]
-        print(elements)
-        _ = input(" ")
         charA, charB = elements["A"], elements["B"]
         embA = np.zeros((_MAX_WLEN, _EMB_DIM)) #, np.zeros((_MAX_WLEN, _EMB_DIM))
         predA = np.zeros((len(self.classes)))#, np.zeros((len(self.classes)))
         countA, countB = 0, 0
 
         utterances = elements["utts"]
+        print(utterances)
         #utterA = [x for x in utterances if x[0] == "A"]
         #utterB = [x for x in utterances if x[0] == "B"]
 
-        if(len(utterances) == 0):
-            return self.__getitem__(idx + 1)
+        #if(len(utterances) == 0):
+        #    return self.__getitem__(idx + 1)
 
         #for uttr in utterA:
         uttr = utterances[idx % len(utterances)] #utterA[idx % len(utterA)]
