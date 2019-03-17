@@ -35,7 +35,7 @@ class RowCNN(nn.Module):
         return logits
 
 class BiRNN(nn.Module):
-    def __init__(self, input_size, hidden_size=100, num_layers=2, num_classes=8):
+    def __init__(self, input_size=100, hidden_size=100, num_layers=2, num_classes=8):
         super(BiRNN, self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
