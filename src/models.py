@@ -38,6 +38,7 @@ class RowCNN(nn.Module):
 
 class BiRNN(nn.Module):
     def __init__(self, batch_size=30, input_size=100, hidden_size=100, num_layers=2, num_classes=8):
+        # NOTE : idk why 30 lol
         super(BiRNN, self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
