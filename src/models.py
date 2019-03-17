@@ -44,10 +44,10 @@ class BiRNN(nn.Module):
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True, bidirectional=True, dropout=0.5)
         self.fc = nn.Linear(hidden_size * 2, num_classes)  # 2 for bidirection
         self.sigmoid = nn.Sigmoid()
-        self.h0, self.c0 = 0, 0
+        self.h0, self.c0 = torch.zeros(1,1), torch.zeros(1,1)
     
     def forward(self, x):
-        if(self.h0 == 0 or self.c0 == 0):
+        if(self.h0 == torch.zeros(1,1) or self.c0 == torch.zeros(1,1)):
             self.h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device) # 2 for bidirection 
             self.c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device)
         
