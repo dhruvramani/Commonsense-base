@@ -10,15 +10,15 @@ from torch.utils.data import Dataset, DataLoader
 
 _DIR = "/home/nevronas/Projects/Personal-Projects/Dhruv/NeuralDialog-CVAE/"
 _GLOVE_PATH = '/home/nevronas/word_embeddings/glove_twitter'
-_EMB_DIM = 50
+_EMB_DIM = 100
 _MAX_WLEN = 18
 
 def init_glove(glove_path=_GLOVE_PATH): # Run only first time
     words = []
     idx = 0
     word2idx = {}
-    vectors = bcolz.carray(np.zeros(1), rootdir='{}/27B.50.dat'.format(glove_path), mode='w')
-    with open('{}/glove.twitter.27B.50d.txt'.format(glove_path), 'rb') as f:
+    vectors = bcolz.carray(np.zeros(1), rootdir='{}/27B.{}d.dat'.format(glove_path, _EMB_DIM), mode='w')
+    with open('{}/glove.twitter.27B.{}d.txt'.format(glove_path, _EMB_DIM), 'rb') as f:
         for l in f:
             line = l.decode().split()
             word = line[0]
@@ -28,10 +28,10 @@ def init_glove(glove_path=_GLOVE_PATH): # Run only first time
             vect = np.array(line[1:]).astype(np.float)
             vectors.append(vect)
 
-    vectors = bcolz.carray(vectors.reshape((1193514, _EMB_DIM)), rootdir='{}/27B.50.dat'.format(glove_path), mode='w')
+    vectors = bcolz.carray(vectors.reshape((1193514, _EMB_DIM)), rootdir='{}/27B.{}.dat'.format(glove_path, _EMB_DIM), mode='w')
     vectors.flush()
-    pickle.dump(words, open('{}/27B.50_words.pkl'.format(glove_path), 'wb'))
-    pickle.dump(word2idx, open('{}/27B.50_idx.pkl'.format(glove_path), 'wb'))
+    pickle.dump(words, open('{}/27B.{}_words.pkl'.format(glove_path, _EMB_DIM), 'wb'))
+    pickle.dump(word2idx, open('{}/27B.{}_idx.pkl'.format(glove_path, _EMB_DIM), 'wb'))
     return idx
 
 class CommonSenseDataset(Dataset):
@@ -193,13 +193,14 @@ class CommonSenseDataset(Dataset):
         return np.array(embA), predA, np.array(embB), predB
 
 if __name__ == '__main__':
-    dset = CommonSenseDataset(10)
-    dataloader = DataLoader(dset, batch_size=128, shuffle=True, num_workers=1)
-    dataloader = iter(dataloader)
-    for i in range(0, len(dataloader) - 1):
-        embA, predA, embB, predB = next(dataloader)
-        countZ, zero = 0, np.zeros((_EMB_DIM))
-        print(embA.shape, predA.shape, embB.shape, predB.shape)
+    init_glove()
+    # dset = CommonSenseDataset(10)
+    # dataloader = DataLoader(dset, batch_size=128, shuffle=True, num_workers=1)
+    # dataloader = iter(dataloader)
+    # for i in range(0, len(dataloader) - 1):
+    #     embA, predA, embB, predB = next(dataloader)
+    #     countZ, zero = 0, np.zeros((_EMB_DIM))
+    #     print(embA.shape, predA.shape, embB.shape, predB.shape)
         '''
         for i in range(0, 80):
             if(np.array_equal(np.array(embA[0, i, :]), zero)):
