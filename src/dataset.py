@@ -52,6 +52,7 @@ class CommonSenseDataset(Dataset):
 
         self.to_write = {"train" : list(), "valid" : list(), "test" : list()}
         self.classes = ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"]
+        self.counter = 0
         self.main_run()
 
     def load_glove(self):
@@ -157,31 +158,35 @@ class CommonSenseDataset(Dataset):
 
     def __getitem__(self, idx):
         data = self.to_write[self.tr]
-        if(idx + self.step_size > len(data)):
-            idx = (idx + self.step_size) - len(data) 
-        elements = data[idx]
+        # if(idx + self.step_size > len(data)):
+        #     idx = (idx + self.step_size) - len(data) 
+        elements = data[self.counter]
         charA, charB = elements["A"], elements["B"]
-        embA, embB = np.zeros((self.step_size, _MAX_WLEN, _EMB_DIM)), np.zeros((self.step_size, _MAX_WLEN, _EMB_DIM))
-        predA, predB = np.zeros((self.step_size, len(self.classes))), np.zeros((self.step_size, len(self.classes)))
+        embA = np.zeros((_MAX_WLEN, _EMB_DIM)) #, np.zeros((_MAX_WLEN, _EMB_DIM))
+        predA = np.zeros((len(self.classes)))#, np.zeros((len(self.classes)))
         countA, countB = 0, 0
 
         utterances = elements["utts"]
-        utterA = [x for x in utterances if x[0] == "A"]
-        utterB = [x for x in utterances if x[0] == "B"]
+        #utterA = [x for x in utterances if x[0] == "A"]
+        #utterB = [x for x in utterances if x[0] == "B"]
 
-        if(len(utterA) == 0 or len(utterB) == 0):
-            return self.__getitem__(idx + 1)
+        #if(len(utterA) == 0 or len(utterB) == 0):
+        #    return self.__getitem__(idx + 1)
 
-        #print(utterA)
-        for uttr in utterA:
-            uttr_text = uttr[1]
-            embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
-            embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
-            for i in range(0, len(embedding)):
-                embA[countA, i, :] = embedding[i]
-            predA[countA, :] = uttr[-1][0]
-            countA += 1
+        #for uttr in utterA:
+        uttr = utterances[idx % len(utterances)] #utterA[idx % len(utterA)]
+        uttr_text = uttr[1]
+        embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
+        embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
+        for i in range(0, len(embedding)):
+            embA[countA, i, :] = embedding[i] #embA[countA, i, :] = embedding[i]
+        predA = np.array(uttr[-1][0]) #predA[countA, :] = uttr[-1][0]
+        #countA += 1
 
+        if(idx % len(utterances) == 0):
+            self.counter += 1
+            
+        '''
         for uttr in utterB:
             uttr_text = uttr[1]
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
@@ -189,9 +194,9 @@ class CommonSenseDataset(Dataset):
             for i in range(0, len(embedding)):
                 embA[countB, i, :] = embedding[i]
             predB[countB, :] = uttr[-1][0]
-            countB += 1
-
-        return np.array(embA), predA, np.array(embB), predB
+            countB += 1    
+        '''
+        return np.array(embA), predA #, np.array(embB), predB
 
 if __name__ == '__main__':
     dset = CommonSenseDataset(10)
