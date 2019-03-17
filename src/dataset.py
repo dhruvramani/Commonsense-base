@@ -53,9 +53,8 @@ class CommonSenseDataset(Dataset):
         self.to_write = {"train" : list(), "valid" : list(), "test" : list()}
         self.classes = ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"]
         self.counter = 0
-        self.lent = self.get_length()
-        print(self.lent)
         self.main_run()
+        self.lent = self.get_length()
 
     def get_length(self):
         len_g = 0
