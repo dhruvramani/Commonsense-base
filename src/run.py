@@ -9,7 +9,7 @@ import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
 
 from models import *
-from dataset import DebrisDataset
+from dataset import CommonSenseDataset
 from utils import progress_bar
 
 parser = argparse.ArgumentParser(description='PyTorch CommonSense Base Model')
