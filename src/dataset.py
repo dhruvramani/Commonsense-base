@@ -179,13 +179,13 @@ class CommonSenseDataset(Dataset):
         embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
         embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
         for i in range(0, len(embedding)):
-            embA[countA, i, :] = embedding[i] #embA[countA, i, :] = embedding[i]
+            embA[i, :] = embedding[i] #embA[countA, i, :] = embedding[i]
         predA = np.array(uttr[-1][0]) #predA[countA, :] = uttr[-1][0]
         #countA += 1
 
         if(idx % len(utterances) == 0):
             self.counter += 1
-            
+
         '''
         for uttr in utterB:
             uttr_text = uttr[1]
