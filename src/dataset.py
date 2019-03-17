@@ -184,7 +184,7 @@ class CommonSenseDataset(Dataset):
         #countA += 1
 
         if(idx % len(utterances) == 0):
-            self.counter += 1
+            self.counter = (self.counter + 1) % len(data)
 
         '''
         for uttr in utterB:
