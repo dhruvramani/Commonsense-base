@@ -168,7 +168,7 @@ class CommonSenseDataset(Dataset):
 
         utterances = elements["utts"]
         print(utterances)
-        if(idx == len(utterances)):
+        if(idx == len(utterances) - 1):
             self.counter = (self.counter + 1) % len(data)
         #utterA = [x for x in utterances if x[0] == "A"]
         #utterB = [x for x in utterances if x[0] == "B"]
