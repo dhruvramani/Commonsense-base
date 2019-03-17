@@ -58,7 +58,7 @@ def train(epoch):
     
     for i in range(step, len(dataloader)):
         sequences, predictions = next(dataloader)
-        sequences = sequences.unsqueeze(1)
+        #sequences = sequences.unsqueeze(1) # NOTE : Comment for BiRNN
         sequences, predictions = sequences.type(torch.FloatTensor).to(device), predictions.type(torch.FloatTensor).to(device)
         output = net(sequences)
         optimizer.zero_grad()
