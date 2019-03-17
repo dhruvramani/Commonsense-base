@@ -160,8 +160,8 @@ class CommonSenseDataset(Dataset):
             idx = (idx + self.step_size) - len(data) 
         elements = data[idx]
         charA, charB = elements["A"], elements["B"]
-        embA, embB = np.zeros((self.step_size * _MAX_WLEN, _EMB_DIM)), np.zeros((self.step_size * _MAX_WLEN, _EMB_DIM))
-        predA, predB = None, None
+        embA, embB = np.zeros((self.step_size, _MAX_WLEN, _EMB_DIM)), np.zeros((self.step_size, _MAX_WLEN, _EMB_DIM))
+        predA, predB = np.zeros((self.step_size, len(self.classes))), None
         countA, countB = 0, 0
 
         utterances = elements["utts"]
@@ -177,7 +177,7 @@ class CommonSenseDataset(Dataset):
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
             embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
             for i in range(0, len(embedding)):
-                embA[countA + i, :] = embedding[i]
+                embA[countA, i, :] = embedding[i]
             countA += len(embedding)
         predA = np.array(utterA[-1][-1])
         predA = predA[0]
@@ -187,7 +187,7 @@ class CommonSenseDataset(Dataset):
             embed_string = re.sub(r"[^a-zA-Z]+", ' ', uttr_text)
             embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
             for i in range(0, len(embedding)):
-                embA[countB + i, :] = embedding[i]
+                embA[countB, i, :] = embedding[i]
             countB += len(embedding)
         predB = np.array(utterB[-1][-1])
         predB = predB[0]
