@@ -105,16 +105,16 @@ class CommonSenseDataset(Dataset):
             for line in f:
                 idkey =  line.split("\t")[0]
                 story = self.data[idkey]
-                tdt = self.story["partition"].replace("dev", "valid")
+                tdt = story["partition"].replace("dev", "valid")
                 dialog = dict()
-                chars = list(self.story["lines"]["1"]["characters"].keys())
+                chars = list(story["lines"]["1"]["characters"].keys())
                 if(len(chars) < 2):
                     continue
                 dialog["A"] = chars[0]
                 dialog["B"] = chars[1] # TODO : Change
                 utterances = list()
                 for stline in range(5):
-                    linei = self.story["lines"]["{}".format(stline + 1)]
+                    linei = story["lines"]["{}".format(stline + 1)]
                     characters = linei["characters"]
 
                     charA, charB = characters[dialog["A"]], characters[dialog["B"]]
