@@ -7,6 +7,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 from models import *
 from dataset import CommonSenseDataset
@@ -51,7 +52,7 @@ def train(epoch):
     dataloader = iter(dataloader)
 
     print('\n=> Loss Epoch: {}'.format(epoch))
-    train_loss, total = 0, 0
+    train_loss, total, prec, recall, fscore = 0, 0, 0.0, 0.0, 0.0
     params = list(net.parameters())
     optimizer = torch.optim.Adam(params, lr=args.lr, weight_decay=args.decay)
     
@@ -65,6 +66,10 @@ def train(epoch):
         loss.backward()
         optimizer.step()
         train_loss += loss.item()
+
+        prec += precision_score(predictions.numpy(), output.numpy(), average='macro')
+        recall += recall_score(predictions.numpy(), output.numpy(), average='macro')
+        fscore += f1_score(predictions.numpy(), output.numpy(), average='macro')
 
         with open("../save/logs/train_loss.log", "a+") as lfile:
             lfile.write("{}\n".format(train_loss / (i - step +1)))
@@ -80,7 +85,7 @@ def train(epoch):
         progress_bar(i, len(dataloader), 'Loss: %.3f' % (train_loss / (i - step + 1)))
 
     step = 0
-    print('=> Loss Network : Epoch [{}/{}], Loss:{:.4f}'.format(epoch + 1, 5, train_loss / len(dataloader)))
+    print('=> Loss Network : Epoch [{}/{}], Loss:{:.4f}\nPrecision : {}, Recall : {}, F1 Score : {}'.format(epoch + 1, 5, train_loss / len(dataloader), prec / len(dataloader), recall / len(dataloader), fscore / len(dataloader)))
 
 def test():
     # TODO finish
