@@ -67,9 +67,9 @@ def train(epoch):
         optimizer.step()
         train_loss += loss.item()
 
-        prec += precision_score(predictions.numpy(), output.numpy(), average='macro')
-        recall += recall_score(predictions.numpy(), output.numpy(), average='macro')
-        fscore += f1_score(predictions.numpy(), output.numpy(), average='macro')
+        prec += precision_score(predictions.cpu().numpy(), output.cpu().numpy(), average='macro')
+        recall += recall_score(predictions.cpu().numpy(), output.cpu().numpy(), average='macro')
+        fscore += f1_score(predictions.cpu().numpy(), output.cpu().numpy(), average='macro')
 
         with open("../save/logs/train_loss.log", "a+") as lfile:
             lfile.write("{}\n".format(train_loss / (i - step +1)))
