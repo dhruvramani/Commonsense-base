@@ -13,7 +13,7 @@ from dataset import DebrisDataset
 from utils import progress_bar
 
 parser = argparse.ArgumentParser(description='PyTorch CommonSense Base Model')
-parser.add_argument('--lr', default=0.01, type=float, help='learning rate') # NOTE change for diff models
+parser.add_argument('--lr', default=0.001, type=float, help='learning rate') # NOTE change for diff models
 parser.add_argument('--batch_size', default=30, type=int)
 parser.add_argument('--resume', '-r', type=int, default=1, help='resume from checkpoint')
 parser.add_argument('--epochs', '-e', type=int, default=4, help='Number of epochs to train.')
@@ -32,7 +32,7 @@ with open("../save/logs/train_loss.log", "w+") as f:
     pass 
 
 print('==> Creating network..')
-net = Model() # TODO Change here
+net = RowCNN() # TODO Change here
 net = net.to(device)
 
 if(args.resume):
@@ -48,7 +48,7 @@ if(args.resume):
 def train(epoch):
     global step
     print('==> Preparing data..')
-    dataset = CommonSenseDataset(n_rows=30, steps= 10)
+    dataset = CommonSenseDataset(10)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     dataloader = iter(dataloader)
 
@@ -59,11 +59,11 @@ def train(epoch):
     
     for i in range(step, len(dataloader)):
         sequences, predictions = next(dataloader)
-        sequences, predictions = sequences.permute([1, 0, 2]), predictions.permute([1, 0, 2])
+        #sequences, predictions = sequences.permute([1, 0, 2]), predictions.permute([1, 0, 2])
         sequences, predictions = sequences.to(device), predictions.to(device)
         output = net(sequences)
         optimizer.zero_grad()
-        loss = loss_fn(output[-1], predictions[0]) # Last LSTM output, Prediction
+        loss = loss_fn(output, predictions) # Last LSTM output, Prediction
         loss.backward(retain_graph=True)
         optimizer.step()
         train_loss += loss.item()

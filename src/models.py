@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 
 class RowCNN(nn.Module):
-    def __init__(self, num_classes=8, split_size=120):
+    def __init__(self, num_classes=8, split_size=100):
         super(RowCNN, self).__init__()
         self.window_sizes = [3, 4, 5]
         self.n_filters = 100
@@ -17,6 +17,7 @@ class RowCNN(nn.Module):
 
         self.linear = nn.Linear(self.n_filters * len(self.window_sizes), self.num_classes)
         self.dropout = nn.Dropout()
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         xs = []
@@ -30,6 +31,6 @@ class RowCNN(nn.Module):
         x = torch.cat(xs, 2) 
         x = x.view(x.size(0), -1)  
         logits = self.linear(x)
-        logits = self.dropout(logits)
+        logits = self.sigmoid(self.dropout(logits))
         return logits
 
