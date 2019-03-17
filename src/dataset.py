@@ -202,7 +202,7 @@ if __name__ == '__main__':
         embA, predA, embB, predB = next(dataloader)
         countZ, zero = 0, np.zeros((_EMB_DIM))
         print(embA.shape, predA.shape, embB.shape, predB.shape)
-        for i in range(0, 60):
+        for i in range(0, 80):
             if(np.array_equal(np.array(embA[0, i, :]), zero)):
                 countZ += 1
         print(countZ)
