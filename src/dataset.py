@@ -161,7 +161,7 @@ class CommonSenseDataset(Dataset):
         elements = data[idx]
         charA, charB = elements["A"], elements["B"]
         embA, embB = np.zeros((self.step_size, _MAX_WLEN, _EMB_DIM)), np.zeros((self.step_size, _MAX_WLEN, _EMB_DIM))
-        predA, predB = np.zeros((self.step_size, len(self.classes))), None
+        predA, predB = np.zeros((self.step_size, len(self.classes))), np.zeros((self.step_size, len(self.classes)))
         countA, countB = 0, 0
 
         utterances = elements["utts"]
