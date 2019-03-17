@@ -8,7 +8,7 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader
 
 
-_DIR = "/home/nevronas/Projects/Personal-Projects/Dhruv/NeuralDialog-CVAE/"
+_DIR = "/home/nevronas/Projects/Personal-Projects/Dhruv/NeuralDialog-CVAE/data/commonsense"
 _GLOVE_PATH = '/home/nevronas/word_embeddings/glove_twitter'
 _EMB_DIM = 100
 _MAX_WLEN = 18
@@ -35,7 +35,7 @@ def init_glove(glove_path=_GLOVE_PATH): # Run only first time
     return idx
 
 class CommonSenseDataset(Dataset):
-    def __init__(self, step_size, load=False, tr="train", annotation_path="data/commonsense/json_version/annotations.json", partition_path="data/commonsense/storyid_partition.txt", pickle_path="data/commonsense/data.pkl", glove_path=_GLOVE_PATH):
+    def __init__(self, step_size, load=False, tr="train", annotation_path="{}/json_version/annotations.json".format(_DIR), partition_path="{}/storyid_partition.txt".format(_DIR), pickle_path="{}/data.pkl".format(_DIR), glove_path=_GLOVE_PATH):
         self.tr = tr
         self.load = load
         self.step_size = step_size
