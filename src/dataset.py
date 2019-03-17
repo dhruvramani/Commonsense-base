@@ -178,7 +178,7 @@ class CommonSenseDataset(Dataset):
             embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
             for i in range(0, len(embedding)):
                 embA[countA + i, :] = embedding[i]
-            countA += 1
+            countA += len(embedding)
         predA = np.array(utterA[-1][-1])
         predA = predA[0]
 
@@ -188,7 +188,7 @@ class CommonSenseDataset(Dataset):
             embedding = [self.glove.get(word, self.glove['unk']) for word in embed_string.split(" ")]
             for i in range(0, len(embedding)):
                 embA[countB + i, :] = embedding[i]
-            countB += 1
+            countB += len(embedding)
         predB = np.array(utterB[-1][-1])
         predB = predB[0]
 
