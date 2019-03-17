@@ -13,7 +13,7 @@ from dataset import CommonSenseDataset
 from utils import progress_bar
 
 parser = argparse.ArgumentParser(description='PyTorch CommonSense Base Model')
-parser.add_argument('--lr', default=0.001, type=float, help='learning rate') # NOTE change for diff models
+parser.add_argument('--lr', default=0.01, type=float, help='learning rate') # NOTE change for diff models
 parser.add_argument('--batch_size', default=30, type=int)
 parser.add_argument('--resume', '-r', type=int, default=1, help='resume from checkpoint')
 parser.add_argument('--epochs', '-e', type=int, default=4, help='Number of epochs to train.')
@@ -25,11 +25,6 @@ args = parser.parse_args()
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc, epoch, step = 0, 0, 0
 loss_fn = torch.nn.BCELoss()
-print('==> Preparing data..')
-
-# To get logs of current run only
-with open("../save/logs/train_loss.log", "w+") as f:
-    pass 
 
 print('==> Creating network..')
 net = RowCNN() # TODO Change here
@@ -44,6 +39,9 @@ if(args.resume):
         with open("../save/info.txt", "r") as f:
             epoch, step = (int(i) for i in str(f.read()).split(" "))
         print("=> CommonSenseNet : prev epoch found")
+else :
+    with open("../save/logs/train_loss.log", "w+") as f:
+        pass 
 
 def train(epoch):
     global step
@@ -64,7 +62,7 @@ def train(epoch):
         output = net(sequences)
         optimizer.zero_grad()
         loss = loss_fn(output, predictions) # Last LSTM output, Prediction
-        loss.backward(retain_graph=True)
+        loss.backward()
         optimizer.step()
         train_loss += loss.item()
 
