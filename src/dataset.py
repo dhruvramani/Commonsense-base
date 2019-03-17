@@ -167,7 +167,6 @@ class CommonSenseDataset(Dataset):
         countA, countB = 0, 0
 
         utterances = elements["utts"]
-        print(utterances)
         if(idx == len(utterances) - 1):
             self.counter = (self.counter + 1) % len(data)
         #utterA = [x for x in utterances if x[0] == "A"]
@@ -203,9 +202,9 @@ if __name__ == '__main__':
     dataloader = DataLoader(dset, batch_size=128, shuffle=True, num_workers=1)
     dataloader = iter(dataloader)
     for i in range(0, len(dataloader) - 1):
-        embA, predA, embB, predB = next(dataloader)
+        embA, predA  = next(dataloader)
         countZ, zero = 0, np.zeros((_EMB_DIM))
-        print(embA.shape, predA.shape, embB.shape, predB.shape)
+        print(embA.shape, predA.shape) #, embB.shape, predB.shape)
     '''
     for i in range(0, 80):
         if(np.array_equal(np.array(embA[0, i, :]), zero)):
