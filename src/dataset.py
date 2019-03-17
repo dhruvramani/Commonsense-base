@@ -11,7 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 _DIR = "/home/nevronas/Projects/Personal-Projects/Dhruv/NeuralDialog-CVAE/"
 _GLOVE_PATH = '/home/nevronas/word_embeddings/glove_twitter'
 _EMB_DIM = 50
-_MAX_WLEN = 20
+_MAX_WLEN = 10
 
 def init_glove(glove_path=_GLOVE_PATH): # Run only first time
     words = []
@@ -202,7 +202,7 @@ if __name__ == '__main__':
         embA, predA, embB, predB = next(dataloader)
         countZ, zero = 0, np.zeros((_EMB_DIM))
         print(embA.shape, predA.shape, embB.shape, predB.shape)
-        for i in range(0, 200):
+        for i in range(0, 100):
             if(np.array_equal(np.array(embA[0, i, :]), zero)):
                 countZ += 1
         print(countZ)
