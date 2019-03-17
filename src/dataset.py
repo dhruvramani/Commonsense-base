@@ -53,7 +53,14 @@ class CommonSenseDataset(Dataset):
         self.to_write = {"train" : list(), "valid" : list(), "test" : list()}
         self.classes = ["joy", "trust", "fear", "surprise", "sadness", "disgust", "anger", "anticipation"]
         self.counter = 0
+        self.lent = self.get_length()
         self.main_run()
+
+    def get_length(self):
+        len_g = 0
+        for elements in self.to_write[self.tr]:
+            leng += len(elements["utts"])
+        self.lent = len_g
 
     def load_glove(self):
         vectors = bcolz.open('{}/27B.{}.dat'.format(self.glove_path, _EMB_DIM))[:]
@@ -154,7 +161,7 @@ class CommonSenseDataset(Dataset):
 
 
     def __len__(self):
-       return len(self.to_write[self.tr])
+        return self.lent
 
     def __getitem__(self, idx):
         data = self.to_write[self.tr]
