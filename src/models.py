@@ -37,21 +37,19 @@ class RowCNN(nn.Module):
         return logits
 
 class BiRNN(nn.Module):
-    def __init__(self, input_size=100, hidden_size=100, num_layers=2, num_classes=8):
+    def __init__(self, batch_size=128, input_size=100, hidden_size=100, num_layers=2, num_classes=8):
         super(BiRNN, self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True, bidirectional=True, dropout=0.5)
         self.fc = nn.Linear(hidden_size * 2, num_classes)  # 2 for bidirection
         self.sigmoid = nn.Sigmoid()
-        self.h0, self.c0 = torch.zeros(1,1), torch.zeros(1,1)
+
+        self.h0 = torch.zeros(self.num_layers * 2, batch_size, self.hidden_size).to(device) # 2 for bidirection 
+        self.c0 = torch.zeros(self.num_layers * 2, batch_size, self.hidden_size).to(device)
     
-    def forward(self, x):
-        if(self.h0 == torch.zeros(1,1) or self.c0 == torch.zeros(1,1)):
-            self.h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device) # 2 for bidirection 
-            self.c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device)
-        
-        out, _ = self.lstm(x, (self.h0, self.c0))  # out: tensor of shape (batch_size, seq_length, hidden_size*2)
+    def forward(self, x):        
+        out, (self.h0, self.c0) = self.lstm(x, (self.h0, self.c0))  # out: tensor of shape (batch_size, seq_length, hidden_size*2)
         
         # Decode the hidden state of the last time step
         out = self.sigmoid(self.fc(out[:, -1, :]))
