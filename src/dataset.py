@@ -60,7 +60,7 @@ class CommonSenseDataset(Dataset):
         len_g = 0
         for elements in self.to_write[self.tr]:
             leng += len(elements["utts"])
-        self.lent = len_g
+        return len_g
 
     def load_glove(self):
         vectors = bcolz.open('{}/27B.{}.dat'.format(self.glove_path, _EMB_DIM))[:]
