@@ -68,10 +68,12 @@ def train(epoch):
         train_loss += loss.item()
 
         pred_num, out_num = predictions.cpu().detach().numpy(), output.cpu().detach().numpy()
+        pred_num[pred_num > 0.5] = 1.
+        pred_num[pred_num < 0.5] = 0.
         # TODO : FIX THIS
-        #prec += precision_score(pred_num, out_num, average='macro')
-        #recall += recall_score(pred_num, out_num, average='macro')
-        #fscore += f1_score(pred_num, out_num, average='macro')
+        prec += precision_score(pred_num, out_num, average='macro')
+        recall += recall_score(pred_num, out_num, average='macro')
+        fscore += f1_score(pred_num, out_num, average='macro')
 
         with open("../save/logs/train_loss.log", "a+") as lfile:
             lfile.write("{}\n".format(train_loss / (i - step +1)))
