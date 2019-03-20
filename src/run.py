@@ -20,6 +20,7 @@ parser.add_argument('--resume', '-r', type=int, default=1, help='resume from che
 parser.add_argument('--epochs', '-e', type=int, default=4, help='Number of epochs to train.')
 parser.add_argument('--momentum', '-lm', type=float, default=0.9, help='Momentum.')
 parser.add_argument('--decay', '-ld', type=float, default=1e-5, help='Weight decay (L2 penalty).')
+parser.add_argument('--model', default='birnn', help='Model : birnn/rowcnn')
 
 args = parser.parse_args()
 
@@ -28,20 +29,23 @@ best_acc, epoch, step = 0, 0, 0
 loss_fn = torch.nn.BCELoss()
 
 print('==> Creating network..')
-net = BiRNN() # TODO Change here
+if(args.model == 'birnn'):
+    net = BiRNN() # TODO Change here
+else :
+    net = RowCNN()
 net = net.to(device)
 
 if(args.resume):
-    if(os.path.isfile('../save/network.ckpt')):
-        net.load_state_dict(torch.load('../save/network.ckpt'))
+    if(os.path.isfile('../save/{}.ckpt'.format(args.model))):
+        net.load_state_dict(torch.load('../save/{}.ckpt'.format(args.model)))
         print('==> CommonSenseNet : loaded')
 
-    if(os.path.isfile("../save/info.txt")):
-        with open("../save/info.txt", "r") as f:
+    if(os.path.isfile("../save/{}_info.txt".format(args.model))):
+        with open("../save/{}_info.txt".format(args.model), "r") as f:
             epoch, step = (int(i) for i in str(f.read()).split(" "))
         print("=> CommonSenseNet : prev epoch found")
 else :
-    with open("../save/logs/train_loss.log", "w+") as f:
+    with open("../save/logs/{}_train_loss.log".format(args.model), "w+") as f:
         pass 
 
 def train(epoch):
@@ -58,7 +62,8 @@ def train(epoch):
     
     for i in range(step, len(dataloader)):
         sequences, predictions = next(dataloader)
-        #sequences = sequences.unsqueeze(1) # NOTE : Comment for BiRNN
+        if(args.model == 'rowcnn'):
+            sequences = sequences.unsqueeze(1) # NOTE : Comment for BiRNN
         sequences, predictions = sequences.type(torch.FloatTensor).to(device), predictions.type(torch.FloatTensor).to(device)
         output = net(sequences)
         optimizer.zero_grad()
@@ -70,20 +75,20 @@ def train(epoch):
         pred_num, out_num = predictions.cpu().detach().numpy(), output.cpu().detach().numpy()
         out_num[out_num > 0.5] = 1.
         out_num[out_num < 0.5] = 0.
-        
+
         prec += precision_score(pred_num, out_num, average='macro')
         recall += recall_score(pred_num, out_num, average='macro')
         fscore += f1_score(pred_num, out_num, average='macro')
 
-        with open("../save/logs/train_loss.log", "a+") as lfile:
+        with open("../save/logs/{}_train_loss.log".format(args.model), "a+") as lfile:
             lfile.write("{}\n".format(train_loss / (i - step +1)))
 
         gc.collect()
         torch.cuda.empty_cache()
 
-        torch.save(net.state_dict(), '../save/network.ckpt')
+        torch.save(net.state_dict(), '../save/{}.ckpt'.format(args.model))
 
-        with open("../save/info.txt", "w+") as f:
+        with open("../save/{}_info.txt".format(args.model), "w+") as f:
             f.write("{} {}".format(epoch, i))
 
         progress_bar(i, len(dataloader), 'Loss: %.3f' % (train_loss / (i - step + 1)))
