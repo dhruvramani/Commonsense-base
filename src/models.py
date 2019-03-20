@@ -44,11 +44,9 @@ class BiRNN(nn.Module):
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True, bidirectional=True, dropout=0.5)
         self.fc = nn.Linear(hidden_size * 2, num_classes)  # 2 for bidirection
         self.sigmoid = nn.Sigmoid()
-
-        #self.h0 = torch.zeros(self.num_layers * 2, batch_size, self.hidden_size).to(device) 
-        #self.c0 = torch.zeros(self.num_layers * 2, batch_size, self.hidden_size).to(device)
     
     def forward(self, x):    
+        # Aren't the weights of the hidden units, but just placeholders to store the hidden activation for the current run
         h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device) # 2 for bidirection 
         c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device)
 
