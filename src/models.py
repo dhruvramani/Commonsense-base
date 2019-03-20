@@ -52,7 +52,7 @@ class BiRNN(nn.Module):
         h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device) # 2 for bidirection 
         c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).to(device)
 
-        out, (h0, c0) = self.lstm(x, (self.h0, self.c0))  # out: tensor of shape (batch_size, seq_length, hidden_size*2)
+        out, (h0, c0) = self.lstm(x, (h0, c0))  # out: tensor of shape (batch_size, seq_length, hidden_size*2)
         
         # Decode the hidden state of the last time step
         out = self.sigmoid(self.fc(out[:, -1, :]))
