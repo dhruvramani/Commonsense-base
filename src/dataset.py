@@ -212,7 +212,7 @@ if __name__ == '__main__':
         embA, predA  = next(dataloader)
         embA = embA.unsqueeze(1)
         #countZ, zero = 0, np.zeros((_EMB_DIM))
-        print(embA.shape, predA.shape) #, embB.shape, predB.shape)
+        print(predA[0]) #, embB.shape, predB.shape)
     '''
     for i in range(0, 80):
         if(np.array_equal(np.array(embA[0, i, :]), zero)):
