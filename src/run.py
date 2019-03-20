@@ -50,12 +50,11 @@ else :
 
 def train(epoch):
     global step
-    print('==> Preparing data..')
     dataset = CommonSenseDataset(10)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     dataloader = iter(dataloader)
 
-    print('\n=> Loss Epoch: {}'.format(epoch))
+    print('\n=> Epoch: {}'.format(epoch))
     train_loss, total, prec, recall, fscore = 0, 0, 0.0, 0.0, 0.0
     params = list(net.parameters())
     optimizer = torch.optim.Adam(params, lr=args.lr, weight_decay=args.decay)
@@ -94,11 +93,32 @@ def train(epoch):
         progress_bar(i, len(dataloader), 'Loss: %.3f' % (train_loss / (i - step + 1)))
 
     step = 0
-    print('=> Loss Network : Epoch [{}/{}], Loss:{:.4f}\nPrecision : {}, Recall : {}, F1 Score : {}'.format(epoch + 1, 5, train_loss / len(dataloader), prec / len(dataloader), recall / len(dataloader), fscore / len(dataloader)))
+    print('=> Training : Epoch [{}/{}], Loss:{:.4f}\nPrecision : {}, Recall : {}, F1 Score : {}'.format(epoch + 1, args.epochs, train_loss / len(dataloader), prec / len(dataloader), recall / len(dataloader), fscore / len(dataloader)))
 
-def test():
-    # TODO finish
-    pass
+def test(epoch):
+    dataset = CommonSenseDataset(10, tr="test")
+    dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
+    dataloader = iter(dataloader)
+
+    prec, recall, fscore = 0.0, 0.0, 0.0  
+
+    for i in range(step, len(dataloader)):
+        sequences, predictions = next(dataloader)
+        if(args.model == 'rowcnn'):
+            sequences = sequences.unsqueeze(1) # NOTE : Comment for BiRNN
+        sequences, predictions = sequences.type(torch.FloatTensor).to(device), predictions.type(torch.FloatTensor).to(device)
+        output = net(sequences)
+
+        pred_num, out_num = predictions.cpu().detach().numpy(), output.cpu().detach().numpy()
+        out_num[out_num > 0.5] = 1.
+        out_num[out_num < 0.5] = 0.
+
+        prec += precision_score(pred_num, out_num, average='macro')
+        recall += recall_score(pred_num, out_num, average='macro')
+        fscore += f1_score(pred_num, out_num, average='macro')
+
+    print('=> Test : Epoch [{}/{}], Precision : {}, Recall : {}, F1 Score : {}'.format(epoch + 1, args.epochs, prec / len(dataloader), recall / len(dataloader), fscore / len(dataloader)))
+
 
 for epoch in range(epoch, epoch + args.epochs):
     train(epoch)
