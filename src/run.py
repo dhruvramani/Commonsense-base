@@ -68,8 +68,8 @@ def train(epoch):
         train_loss += loss.item()
 
         pred_num, out_num = predictions.cpu().detach().numpy(), output.cpu().detach().numpy()
-        pred_num[pred_num > 0.5] = 1.
-        pred_num[pred_num < 0.5] = 0.
+        out_num[out_num > 0.5] = 1.
+        out_num[out_num < 0.5] = 0.
         print(pred_num[0], out_num[0])
         # TODO : FIX THIS
         prec += precision_score(pred_num, out_num, average='macro')
