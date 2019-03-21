@@ -25,7 +25,7 @@ parser.add_argument('--model', default='birnn', help='Model : birnn/rowcnn')
 args = parser.parse_args()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-epoch, step = 0, 0, 0
+epoch, step = 0, 0
 best_p, best_r, best_f = 0.0, 0.0, 0.0
 loss_fn = torch.nn.BCELoss()
 
