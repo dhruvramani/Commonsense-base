@@ -25,7 +25,8 @@ parser.add_argument('--model', default='birnn', help='Model : birnn/rowcnn')
 args = parser.parse_args()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-best_acc, epoch, step = 0, 0, 0
+epoch, step = 0, 0, 0
+best_p, best_r, best_f = 0.0, 0.0, 0.0
 loss_fn = torch.nn.BCELoss()
 
 print('==> Creating network..')
@@ -54,7 +55,6 @@ def train(epoch):
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     dataloader = iter(dataloader)
 
-    print('\n=> Epoch: {}'.format(epoch))
     train_loss, total, prec, recall, fscore = 0, 0, 0.0, 0.0, 0.0
     params = list(net.parameters())
     optimizer = torch.optim.Adam(params, lr=args.lr, weight_decay=args.decay)
@@ -117,9 +117,17 @@ def test(epoch):
         recall += recall_score(pred_num, out_num, average='macro')
         fscore += f1_score(pred_num, out_num, average='macro')
 
+    if(best_p < prec / len(dataloader)):
+        best_p = prec / len(dataloader)
+    if(best_r < recall / len(dataloader)):
+        best_r = recall / len(dataloader)
+    if(best_f < fscore / len(dataloader)):
+        best_f = fscore / len(dataloader)
+
     print('=> Test : Epoch [{}/{}], Precision : {}, Recall : {}, F1 Score : {}'.format(epoch + 1, args.epochs, prec / len(dataloader), recall / len(dataloader), fscore / len(dataloader)))
 
 
 for epoch in range(epoch, epoch + args.epochs):
     train(epoch)
     test(epoch)
+    print('=> Best - Precision : {}, Recall : {}, F1 Score : {}'.format(best_p, best_r, best_f))

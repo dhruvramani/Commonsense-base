@@ -153,7 +153,7 @@ class CommonSenseDataset(Dataset):
                 dialog["utts"] = utterances
                 self.to_write[tdt].append(dialog)
             dev_len = len(to_write["valid"])
-            self.to_write["train"], self.to_write["valid"] = self.to_write["valid"][:int(0.8 * dev_len)], self.to_write["valid"][int(0.8 * dev_len) + 1:]
+            self.to_write["train"] = self.to_write["valid"] # self.to_write["train"], self.to_write["valid"] = self.to_write["valid"][:int(0.8 * dev_len)], self.to_write["valid"][int(0.8 * dev_len) + 1:]
             print(count, zerc)
 
             with open(_DIR + self.pickle_path, "wb+") as handle:
@@ -205,7 +205,7 @@ class CommonSenseDataset(Dataset):
         return np.array(embA), predA #, np.array(embB), predB
 
 if __name__ == '__main__':
-    dset = CommonSenseDataset(10)
+    dset = CommonSenseDataset(10, load=True)
     dataloader = DataLoader(dset, batch_size=128, shuffle=True, num_workers=1)
     dataloader = iter(dataloader)
     for i in range(0, len(dataloader) - 1):
