@@ -28,6 +28,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 epoch, step = 0, 0
 best_p, best_r, best_f = 0.0, 0.0, 0.0
 loss_fn = torch.nn.BCELoss()
+dataset = CommonSenseDataset(10)
 
 print('==> Creating network..')
 if(args.model == 'birnn'):
@@ -51,7 +52,6 @@ else :
 
 def train(epoch):
     global step
-    dataset = CommonSenseDataset(10)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     dataloader = iter(dataloader)
 
@@ -96,6 +96,7 @@ def train(epoch):
     print('=> Training : Epoch [{}/{}], Loss:{:.4f}\nPrecision : {}, Recall : {}, F1 Score : {}'.format(epoch + 1, args.epochs, train_loss / len(dataloader), prec / len(dataloader), recall / len(dataloader), fscore / len(dataloader)))
 
 def test(epoch):
+    global best_p, best_f, best_r
     dataset = CommonSenseDataset(10, tr="test")
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     dataloader = iter(dataloader)
